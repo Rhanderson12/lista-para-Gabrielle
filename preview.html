@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>UnicaPhones — Preview</title>
+<title>Unica Atacado</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -14,12 +14,66 @@ body{font-family:'Inter',sans-serif;background:#f4f6f9;color:#1a1a2e}
 .screen.active{display:flex}
 
 /* ======= LOGIN ======= */
-#loginScreen{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 60%,#0f172a 100%);align-items:center;justify-content:center;padding:20px}
-.login-box{background:white;border-radius:20px;padding:48px 40px;width:100%;max-width:420px;box-shadow:0 24px 60px rgba(0,0,0,0.3)}
-.login-logo{text-align:center;margin-bottom:32px}
-.login-logo .logo-text{font-size:1.8rem;font-weight:700;color:#0f172a;letter-spacing:-0.5px}
+#loginScreen{
+  position:relative;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:#060d1a;
+  overflow:hidden;
+}
+#loginScreen canvas{position:absolute;inset:0;z-index:0}
+#loginScreen::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 50%, rgba(37,99,235,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 50%, rgba(124,58,237,0.12) 0%, transparent 60%);
+  z-index:1;
+}
+.login-split{
+  position:relative;
+  z-index:2;
+  display:flex;
+  width:100%;
+  max-width:900px;
+  min-height:560px;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 32px 80px rgba(0,0,0,0.6);
+}
+.login-left{
+  flex:1;
+  background:linear-gradient(145deg,#0f172a,#1e3a5f);
+  padding:48px 40px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  border-right:1px solid rgba(255,255,255,0.06);
+}
+.login-left-brand{font-size:1.5rem;font-weight:800;color:white;letter-spacing:-0.5px}
+.login-left-brand span{color:#3b82f6}
+.login-left-tag{font-size:0.72rem;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+.login-left-desc{font-size:1.3rem;font-weight:600;color:white;line-height:1.5;margin-top:auto;margin-bottom:32px}
+.login-left-desc span{color:#3b82f6}
+.login-left-features{display:flex;flex-direction:column;gap:14px}
+.lf-item{display:flex;align-items:center;gap:12px;font-size:0.83rem;color:#94a3b8}
+.lf-icon{width:32px;height:32px;border-radius:8px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.login-box{
+  width:380px;
+  flex-shrink:0;
+  background:#ffffff;
+  border-radius:0;
+  padding:44px 36px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.login-logo{text-align:center;margin-bottom:28px}
+.login-logo .logo-text{font-size:1.5rem;font-weight:800;color:#0f172a;letter-spacing:-0.5px}
 .login-logo .logo-text span{color:#2563eb}
-.login-logo p{font-size:0.82rem;color:#64748b;margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+.login-logo p{display:none}
 .login-title{font-size:1.1rem;font-weight:600;color:#1e293b;margin-bottom:24px;text-align:center}
 .form-group{margin-bottom:18px}
 .form-group label{display:block;font-size:0.82rem;font-weight:500;color:#374151;margin-bottom:6px}
@@ -155,37 +209,48 @@ tr:hover td{background:#f8fafc}
 
 <!-- ======================== LOGIN ======================== -->
 <div id="loginScreen" class="screen active">
-  <div class="login-box">
-    <div class="login-logo">
-      <div class="logo-text">Unica<span>Phones</span></div>
-      <p>Wholesale Platform</p>
+  <canvas id="bgCanvas"></canvas>
+  <div class="login-split">
+    <!-- LADO ESQUERDO -->
+    <div class="login-left">
+      <div>
+        <div class="login-left-brand">UNICA <span>ATACADO</span></div>
+        <div class="login-left-tag">Plataforma B2B</div>
+      </div>
+      <div class="login-left-desc">
+        Smartphones e dispositivos em<br/><span>grandes quantidades</span> para<br/>atacadistas e revendedores.
+      </div>
+      <div class="login-left-features">
+        <div class="lf-item"><div class="lf-icon">📦</div><span>Inventário consistente e atualizado</span></div>
+        <div class="lf-item"><div class="lf-icon">✅</div><span>Classificação precisa dos aparelhos</span></div>
+        <div class="lf-item"><div class="lf-icon">🚀</div><span>Prazo de entrega rápido</span></div>
+      </div>
     </div>
-    <p class="login-title">Faça login na sua conta.</p>
-    <div class="form-group">
-      <label>Endereço de email</label>
-      <input type="email" id="emailInput" value="rhanderson.tomaz@gmail.com" placeholder="seu@email.com"/>
-    </div>
-    <div class="form-group">
-      <label>Senha</label>
-      <input type="password" id="passInput" value="senha123" placeholder="••••••••"/>
-      <span class="forgot-link" onclick="goTo('resetScreen')">Esqueceu sua senha? Redefinir senha</span>
-    </div>
-    <button class="btn-login" onclick="doLogin()">Entrar</button>
-    <div class="login-divider"><span>Novo cliente?</span></div>
-    <p style="font-size:0.82rem;color:#64748b;text-align:center;margin-bottom:16px">Vendemos smartphones e outros dispositivos em grandes quantidades para atacadistas e revendedores em todo o mundo.</p>
-    <div class="login-features">
-      <div class="feature-item"><div class="feature-icon">📦</div><span>Inventário consistente</span></div>
-      <div class="feature-item"><div class="feature-icon">✅</div><span>Classificação precisa</span></div>
-      <div class="feature-item"><div class="feature-icon">🚀</div><span>Prazo de entrega rápido</span></div>
+    <!-- LADO DIREITO (FORM) -->
+    <div class="login-box">
+      <div class="login-logo">
+        <div class="logo-text">UNICA <span>ATACADO</span></div>
+      </div>
+      <p class="login-title">Faça login na sua conta.</p>
+      <div class="form-group">
+        <label>Endereço de email</label>
+        <input type="email" id="emailInput" value="rhanderson.tomaz@gmail.com" placeholder="seu@email.com"/>
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="passInput" value="senha123" placeholder="••••••••"/>
+        <span class="forgot-link" onclick="goTo('resetScreen')">Esqueceu sua senha? Redefinir senha</span>
+      </div>
+      <button class="btn-login" onclick="doLogin()">Entrar</button>
     </div>
   </div>
 </div>
 
 <!-- ======================== RESET SENHA ======================== -->
 <div id="resetScreen" class="screen">
-  <div class="login-box">
+  <div class="login-box" style="border-radius:16px;max-width:400px;box-shadow:0 24px 60px rgba(0,0,0,0.3)">
     <div class="login-logo">
-      <div class="logo-text">Unica<span>Phones</span></div>
+      <div class="logo-text">UNICA <span>ATACADO</span></div>
     </div>
     <p class="login-title">Redefinir senha</p>
     <p style="font-size:0.83rem;color:#64748b;margin-bottom:20px;text-align:center">Digite seu email e enviaremos um link para redefinir sua senha.</p>
@@ -206,7 +271,7 @@ tr:hover td{background:#f8fafc}
   <!-- HEADER -->
   <header class="app-header">
     <div style="display:flex;align-items:center">
-      <div class="logo">Unica<span>Phones</span></div>
+      <div class="logo">UNICA <span>ATACADO</span></div>
       <nav class="app-nav">
         <div class="nav-item active" onclick="setNav(this,'stockPage')">Estoque</div>
         <div class="nav-item" onclick="setNav(this,'ordersPage')">Meus Pedidos</div>
@@ -631,6 +696,97 @@ document.getElementById('cartModal').addEventListener('click', function(e){ if(e
 // Init
 renderTable(PRODUCTS);
 updateStats();
+
+// ======= CANVAS FUNDO TECNOLÓGICO =======
+(function(){
+  const canvas = document.getElementById('bgCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, nodes=[], animId;
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function initNodes(){
+    nodes = [];
+    const count = Math.floor((W * H) / 14000);
+    for(let i=0;i<count;i++){
+      nodes.push({
+        x: Math.random()*W, y: Math.random()*H,
+        vx:(Math.random()-0.5)*0.4, vy:(Math.random()-0.5)*0.4,
+        r: Math.random()*2+1,
+        pulse: Math.random()*Math.PI*2
+      });
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const t = Date.now()*0.001;
+
+    // linhas entre nós próximos
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<130){
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x,nodes[i].y);
+          ctx.lineTo(nodes[j].x,nodes[j].y);
+          ctx.strokeStyle=`rgba(59,130,246,${(1-dist/130)*0.18})`;
+          ctx.lineWidth=0.7;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // nós
+    nodes.forEach(n=>{
+      n.pulse += 0.02;
+      const alpha = 0.4 + Math.sin(n.pulse)*0.3;
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(99,160,255,${alpha})`;
+      ctx.fill();
+
+      // mover
+      n.x+=n.vx; n.y+=n.vy;
+      if(n.x<0||n.x>W) n.vx*=-1;
+      if(n.y<0||n.y>H) n.vy*=-1;
+    });
+
+    // linhas de grade leve
+    ctx.strokeStyle='rgba(30,58,95,0.25)';
+    ctx.lineWidth=0.5;
+    for(let x=0;x<W;x+=80){
+      ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();
+    }
+    for(let y=0;y<H;y+=80){
+      ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();
+    }
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  function start(){
+    resize(); initNodes(); draw();
+  }
+
+  function stop(){
+    cancelAnimationFrame(animId);
+  }
+
+  // observa quando a tela de login está ativa
+  const observer = new MutationObserver(()=>{
+    const login = document.getElementById('loginScreen');
+    if(login && login.classList.contains('active')) start(); else stop();
+  });
+  document.querySelectorAll('.screen').forEach(s=>observer.observe(s,{attributes:true,attributeFilter:['class']}));
+  window.addEventListener('resize',()=>{ resize(); initNodes(); });
+  start();
+})();
 </script>
 </body>
 </html>
