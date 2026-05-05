@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UnicaPhones — Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#f4f6f9;color:#1a1a2e}
+
+/* ======= TELAS ======= */
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex}
+
+/* ======= LOGIN ======= */
+#loginScreen{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 60%,#0f172a 100%);align-items:center;justify-content:center;padding:20px}
+.login-box{background:white;border-radius:20px;padding:48px 40px;width:100%;max-width:420px;box-shadow:0 24px 60px rgba(0,0,0,0.3)}
+.login-logo{text-align:center;margin-bottom:32px}
+.login-logo .logo-text{font-size:1.8rem;font-weight:700;color:#0f172a;letter-spacing:-0.5px}
+.login-logo .logo-text span{color:#2563eb}
+.login-logo p{font-size:0.82rem;color:#64748b;margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+.login-title{font-size:1.1rem;font-weight:600;color:#1e293b;margin-bottom:24px;text-align:center}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:0.82rem;font-weight:500;color:#374151;margin-bottom:6px}
+.form-group input{width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:0.9rem;font-family:'Inter',sans-serif;outline:none;transition:border-color 0.2s}
+.form-group input:focus{border-color:#2563eb}
+.forgot-link{display:block;text-align:right;font-size:0.8rem;color:#2563eb;text-decoration:none;margin-top:6px;cursor:pointer}
+.btn-login{width:100%;padding:13px;background:#2563eb;color:white;border:none;border-radius:10px;font-size:0.95rem;font-weight:600;cursor:pointer;margin-top:8px;transition:background 0.2s}
+.btn-login:hover{background:#1d4ed8}
+.login-divider{text-align:center;margin:24px 0 20px;position:relative}
+.login-divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:#e2e8f0}
+.login-divider span{background:white;padding:0 12px;font-size:0.8rem;color:#94a3b8;position:relative}
+.login-features{display:flex;flex-direction:column;gap:10px}
+.feature-item{display:flex;align-items:center;gap:10px;font-size:0.82rem;color:#64748b}
+.feature-icon{width:28px;height:28px;background:#eff6ff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0}
+.new-customer{margin-top:20px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0}
+.new-customer p{font-size:0.78rem;color:#64748b;line-height:1.5}
+
+/* ======= APP LAYOUT ======= */
+#appScreen{flex-direction:column}
+.app-header{background:#0f172a;color:white;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.app-header .logo{font-size:1.2rem;font-weight:700;letter-spacing:-0.5px}
+.app-header .logo span{color:#2563eb}
+.app-nav{display:flex;gap:4px;margin-left:32px}
+.nav-item{padding:6px 14px;border-radius:8px;font-size:0.82rem;color:#94a3b8;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.nav-item:hover,.nav-item.active{background:#1e293b;color:white}
+.header-right{display:flex;align-items:center;gap:16px}
+.header-right .cart-badge{background:#2563eb;color:white;padding:6px 14px;border-radius:20px;font-size:0.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px}
+.header-right .user-info{font-size:0.8rem;color:#94a3b8}
+.app-body{flex:1;display:flex}
+
+/* ======= SIDEBAR ======= */
+.sidebar{width:260px;background:white;border-right:1px solid #e2e8f0;padding:20px 16px;overflow-y:auto;flex-shrink:0}
+.sidebar-section{margin-bottom:24px}
+.sidebar-title{font-size:0.7rem;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px}
+.filter-group{margin-bottom:14px}
+.filter-group label{display:block;font-size:0.8rem;font-weight:500;color:#374151;margin-bottom:6px}
+.filter-group select,.filter-group input{width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.82rem;font-family:'Inter',sans-serif;outline:none;background:white}
+.filter-group select:focus,.filter-group input:focus{border-color:#2563eb}
+.checkbox-list{display:flex;flex-direction:column;gap:6px}
+.checkbox-item{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#374151;cursor:pointer}
+.checkbox-item input{width:14px;height:14px;accent-color:#2563eb}
+.btn-apply{width:100%;padding:9px;background:#2563eb;color:white;border:none;border-radius:8px;font-size:0.82rem;font-weight:600;cursor:pointer}
+.btn-reset{width:100%;padding:9px;background:none;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.82rem;color:#64748b;cursor:pointer;margin-top:6px}
+
+/* ======= MAIN CONTENT ======= */
+.main-content{flex:1;padding:24px;overflow-y:auto}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.page-header h1{font-size:1.2rem;font-weight:700;color:#0f172a}
+.page-header p{font-size:0.82rem;color:#64748b;margin-top:2px}
+.view-toggle{display:flex;border:1.5px solid #e2e8f0;border-radius:8px;overflow:hidden}
+.view-btn{padding:7px 12px;background:none;border:none;cursor:pointer;font-size:0.9rem;color:#94a3b8;transition:all 0.2s}
+.view-btn.active{background:#2563eb;color:white}
+.stats-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.stat-card{background:white;border-radius:12px;padding:14px 18px;flex:1;min-width:140px;border:1px solid #e2e8f0}
+.stat-card .stat-val{font-size:1.4rem;font-weight:700;color:#0f172a}
+.stat-card .stat-label{font-size:0.75rem;color:#64748b;margin-top:2px}
+.stat-card .stat-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:0.7rem;font-weight:600;margin-top:4px}
+.stat-badge.green{background:#dcfce7;color:#16a34a}
+.stat-badge.blue{background:#dbeafe;color:#1d4ed8}
+.stat-badge.orange{background:#ffedd5;color:#c2410c}
+
+/* ======= TABELA ======= */
+.table-wrapper{background:white;border-radius:16px;border:1px solid #e2e8f0;overflow:hidden}
+.table-toolbar{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f1f5f9;gap:12px;flex-wrap:wrap}
+.search-input{padding:8px 12px 8px 36px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:0.82rem;outline:none;width:220px;background:white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 10px center}
+.search-input:focus{border-color:#2563eb}
+.table-actions{display:flex;gap:8px}
+table{width:100%;border-collapse:collapse}
+thead tr{background:#f8fafc}
+th{padding:11px 16px;text-align:left;font-size:0.72rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #e2e8f0}
+td{padding:13px 16px;font-size:0.85rem;color:#374151;border-bottom:1px solid #f1f5f9}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8fafc}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:600}
+.badge-green{background:#dcfce7;color:#16a34a}
+.badge-blue{background:#dbeafe;color:#1d4ed8}
+.badge-orange{background:#ffedd5;color:#c2410c}
+.badge-red{background:#fee2e2;color:#dc2626}
+.badge-gray{background:#f1f5f9;color:#64748b}
+.btn-add-table{padding:6px 14px;background:#2563eb;color:white;border:none;border-radius:7px;font-size:0.78rem;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn-add-table:hover{background:#1d4ed8}
+.btn-add-table:disabled{background:#e2e8f0;color:#94a3b8;cursor:not-allowed}
+.product-cell{display:flex;align-items:center;gap:10px}
+.product-icon{width:36px;height:36px;background:linear-gradient(135deg,#eff6ff,#dbeafe);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.product-name{font-weight:600;color:#0f172a;font-size:0.88rem}
+.product-sku{font-size:0.72rem;color:#94a3b8}
+.price{font-weight:700;color:#0f172a}
+.pagination{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #f1f5f9}
+.pagination span{font-size:0.8rem;color:#64748b}
+.page-btns{display:flex;gap:4px}
+.page-btn{width:30px;height:30px;border-radius:6px;border:1.5px solid #e2e8f0;background:white;font-size:0.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.page-btn.active{background:#2563eb;color:white;border-color:#2563eb}
+
+/* ======= CARRINHO MODAL ======= */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;display:none;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.cart-modal{background:white;border-radius:20px;width:100%;max-width:500px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;margin:20px}
+.cart-header{padding:20px 24px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between}
+.cart-header h2{font-size:1.1rem;font-weight:700}
+.close-btn{background:none;border:none;font-size:1.2rem;cursor:pointer;color:#64748b;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.close-btn:hover{background:#f1f5f9}
+.cart-items{flex:1;overflow-y:auto;padding:16px 24px}
+.cart-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f1f5f9}
+.cart-item:last-child{border-bottom:none}
+.cart-item-info{flex:1}
+.cart-item-name{font-weight:600;font-size:0.9rem}
+.cart-item-details{font-size:0.78rem;color:#64748b;margin-top:2px}
+.cart-item-qty{display:flex;align-items:center;gap:8px}
+.qty-btn{width:26px;height:26px;border-radius:6px;border:1.5px solid #e2e8f0;background:white;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center}
+.qty-val{font-weight:600;font-size:0.88rem;min-width:24px;text-align:center}
+.cart-item-price{font-weight:700;font-size:0.9rem;color:#0f172a;min-width:80px;text-align:right}
+.cart-footer{padding:16px 24px;border-top:1px solid #f1f5f9}
+.cart-summary{margin-bottom:16px}
+.cart-row{display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:6px;color:#64748b}
+.cart-row.total{font-weight:700;font-size:1rem;color:#0f172a;margin-top:10px;padding-top:10px;border-top:1px solid #f1f5f9}
+.btn-whatsapp{width:100%;padding:13px;background:#25d366;color:white;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-whatsapp:hover{background:#1ebe5a}
+.empty-cart{text-align:center;padding:40px 0;color:#94a3b8}
+
+/* ======= RESET SENHA ======= */
+#resetScreen{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 60%,#0f172a 100%);align-items:center;justify-content:center;padding:20px}
+
+/* ======= RESPONSIVO ======= */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .app-nav{display:none}
+  .stats-bar .stat-card{min-width:120px}
+  th:nth-child(4),td:nth-child(4),th:nth-child(5),td:nth-child(5){display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ======================== LOGIN ======================== -->
+<div id="loginScreen" class="screen active">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="logo-text">Unica<span>Phones</span></div>
+      <p>Wholesale Platform</p>
+    </div>
+    <p class="login-title">Faça login na sua conta.</p>
+    <div class="form-group">
+      <label>Endereço de email</label>
+      <input type="email" id="emailInput" value="rhanderson.tomaz@gmail.com" placeholder="seu@email.com"/>
+    </div>
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" id="passInput" value="senha123" placeholder="••••••••"/>
+      <span class="forgot-link" onclick="goTo('resetScreen')">Esqueceu sua senha? Redefinir senha</span>
+    </div>
+    <button class="btn-login" onclick="doLogin()">Entrar</button>
+    <div class="login-divider"><span>Novo cliente?</span></div>
+    <p style="font-size:0.82rem;color:#64748b;text-align:center;margin-bottom:16px">Vendemos smartphones e outros dispositivos em grandes quantidades para atacadistas e revendedores em todo o mundo.</p>
+    <div class="login-features">
+      <div class="feature-item"><div class="feature-icon">📦</div><span>Inventário consistente</span></div>
+      <div class="feature-item"><div class="feature-icon">✅</div><span>Classificação precisa</span></div>
+      <div class="feature-item"><div class="feature-icon">🚀</div><span>Prazo de entrega rápido</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== RESET SENHA ======================== -->
+<div id="resetScreen" class="screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="logo-text">Unica<span>Phones</span></div>
+    </div>
+    <p class="login-title">Redefinir senha</p>
+    <p style="font-size:0.83rem;color:#64748b;margin-bottom:20px;text-align:center">Digite seu email e enviaremos um link para redefinir sua senha.</p>
+    <div class="form-group">
+      <label>Endereço de email</label>
+      <input type="email" placeholder="seu@email.com"/>
+    </div>
+    <button class="btn-login" onclick="alert('Link enviado para seu email!')">Enviar link</button>
+    <p style="text-align:center;margin-top:16px;font-size:0.82rem;color:#64748b">
+      <span class="forgot-link" onclick="goTo('loginScreen')">← Voltar ao login</span>
+    </p>
+  </div>
+</div>
+
+<!-- ======================== APP ======================== -->
+<div id="appScreen" class="screen">
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div style="display:flex;align-items:center">
+      <div class="logo">Unica<span>Phones</span></div>
+      <nav class="app-nav">
+        <div class="nav-item active" onclick="setNav(this,'stockPage')">Estoque</div>
+        <div class="nav-item" onclick="setNav(this,'ordersPage')">Meus Pedidos</div>
+        <div class="nav-item" onclick="setNav(this,'profilePage')">Conta</div>
+      </nav>
+    </div>
+    <div class="header-right">
+      <div class="cart-badge" onclick="openCart()">🛒 Carrinho <span id="cartCount">0</span></div>
+      <div class="user-info">rhanderson.tomaz@gmail.com</div>
+      <span style="color:#64748b;cursor:pointer;font-size:0.82rem" onclick="goTo('loginScreen')">Sair</span>
+    </div>
+  </header>
+
+  <div class="app-body">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Filtros</div>
+        <div class="filter-group">
+          <label>Grupo de Depósito</label>
+          <select onchange="filterProducts()">
+            <option value="101">Grupo 101</option>
+            <option value="102">Grupo 102</option>
+            <option value="103">Grupo 103</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Marca</label>
+          <select id="brandFilter" onchange="filterProducts()">
+            <option value="">Todas</option>
+            <option>Apple</option>
+            <option>Samsung</option>
+            <option>Motorola</option>
+            <option>Xiaomi</option>
+            <option>OnePlus</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Condição</label>
+          <div class="checkbox-list">
+            <label class="checkbox-item"><input type="checkbox" checked onchange="filterProducts()"> Novo</label>
+            <label class="checkbox-item"><input type="checkbox" checked onchange="filterProducts()"> Seminovo A</label>
+            <label class="checkbox-item"><input type="checkbox" onchange="filterProducts()"> Seminovo B</label>
+            <label class="checkbox-item"><input type="checkbox" onchange="filterProducts()"> Recondicionado</label>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Faixa de Preço (USD)</label>
+          <input type="number" placeholder="Mín" style="margin-bottom:6px"/>
+          <input type="number" placeholder="Máx"/>
+        </div>
+        <button class="btn-apply" onclick="filterProducts()">Aplicar Filtros</button>
+        <button class="btn-reset" onclick="resetFilters()">Limpar</button>
+      </div>
+    </aside>
+
+    <!-- PÁGINAS -->
+    <main class="main-content">
+
+      <!-- STOCK PAGE -->
+      <div id="stockPage" class="page">
+        <div class="page-header">
+          <div>
+            <h1>Estoque Disponível</h1>
+            <p id="stockSubtitle">Grupo de Depósito 101 · Atualizado agora</p>
+          </div>
+          <div class="view-toggle">
+            <button class="view-btn active" onclick="setView('table',this)">☰</button>
+            <button class="view-btn" onclick="setView('grid',this)">⊞</button>
+          </div>
+        </div>
+
+        <div class="stats-bar">
+          <div class="stat-card">
+            <div class="stat-val" id="totalModels">0</div>
+            <div class="stat-label">Modelos disponíveis</div>
+            <span class="stat-badge blue">Em estoque</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="totalUnits">0</div>
+            <div class="stat-label">Unidades totais</div>
+            <span class="stat-badge green">Pronto p/ envio</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" id="cartTotal">0</div>
+            <div class="stat-label">Itens no carrinho</div>
+            <span class="stat-badge orange">Selecionados</span>
+          </div>
+        </div>
+
+        <div class="table-wrapper" id="tableView">
+          <div class="table-toolbar">
+            <input class="search-input" type="text" placeholder="Buscar modelo, marca..." oninput="searchProducts(this.value)"/>
+            <div class="table-actions">
+              <span style="font-size:0.8rem;color:#64748b" id="resultCount"></span>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Condição</th>
+                <th>Armazenamento</th>
+                <th>Cor</th>
+                <th>Estoque</th>
+                <th>Preço Unit.</th>
+                <th>Qtd</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody id="productTableBody"></tbody>
+          </table>
+          <div class="pagination">
+            <span id="paginationInfo"></span>
+            <div class="page-btns">
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">3</button>
+              <button class="page-btn">›</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- GRID VIEW -->
+        <div id="gridView" style="display:none">
+          <div id="productGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px"></div>
+        </div>
+      </div>
+
+      <!-- ORDERS PAGE -->
+      <div id="ordersPage" class="page" style="display:none">
+        <div class="page-header"><div><h1>Meus Pedidos</h1><p>Histórico de compras</p></div></div>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Pedido</th><th>Data</th><th>Itens</th><th>Total</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>#ORD-2024-001</td><td>02/05/2025</td><td>15 unidades</td><td>USD 4.200</td><td><span class="badge badge-green">Entregue</span></td></tr>
+              <tr><td>#ORD-2024-002</td><td>28/04/2025</td><td>8 unidades</td><td>USD 2.100</td><td><span class="badge badge-blue">Em trânsito</span></td></tr>
+              <tr><td>#ORD-2024-003</td><td>20/04/2025</td><td>22 unidades</td><td>USD 7.800</td><td><span class="badge badge-orange">Processando</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PROFILE PAGE -->
+      <div id="profilePage" class="page" style="display:none">
+        <div class="page-header"><div><h1>Minha Conta</h1><p>Informações do perfil</p></div></div>
+        <div style="background:white;border-radius:16px;border:1px solid #e2e8f0;padding:28px;max-width:480px">
+          <div class="form-group"><label>Nome completo</label><input type="text" value="Rhanderson Tomaz"/></div>
+          <div class="form-group"><label>Email</label><input type="email" value="rhanderson.tomaz@gmail.com"/></div>
+          <div class="form-group"><label>Empresa</label><input type="text" value="Minha Empresa Ltda"/></div>
+          <div class="form-group"><label>WhatsApp</label><input type="text" value="+55 83 98613-0800"/></div>
+          <button class="btn-login" style="max-width:180px">Salvar alterações</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ======================== CARRINHO MODAL ======================== -->
+<div class="modal-overlay" id="cartModal">
+  <div class="cart-modal">
+    <div class="cart-header">
+      <h2>🛒 Carrinho de Pedido</h2>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="empty-cart">Seu carrinho está vazio</div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-summary" id="cartSummary"></div>
+      <button class="btn-whatsapp" onclick="sendWhatsApp()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Enviar pedido pelo WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ======= DADOS =======
+const WHATSAPP = '5583986130800';
+
+const PRODUCTS = [
+  {id:1,brand:'Apple',name:'iPhone 15 Pro Max',storage:'256GB',color:'Titânio Natural',condition:'Novo',stock:24,price:820,sku:'IPH-15PM-256-TN'},
+  {id:2,brand:'Apple',name:'iPhone 15 Pro',storage:'128GB',color:'Titânio Preto',condition:'Novo',stock:18,price:720,sku:'IPH-15P-128-TB'},
+  {id:3,brand:'Apple',name:'iPhone 14',storage:'128GB',color:'Meia-noite',condition:'Seminovo A',stock:35,price:480,sku:'IPH-14-128-MN'},
+  {id:4,brand:'Apple',name:'iPhone 13',storage:'128GB',color:'Vermelho',condition:'Seminovo A',stock:42,price:360,sku:'IPH-13-128-VR'},
+  {id:5,brand:'Samsung',name:'Galaxy S24 Ultra',storage:'512GB',color:'Titânio Preto',condition:'Novo',stock:12,price:890,sku:'SAM-S24U-512-TP'},
+  {id:6,brand:'Samsung',name:'Galaxy S24+',storage:'256GB',color:'Violeta',condition:'Novo',stock:20,price:650,sku:'SAM-S24P-256-VI'},
+  {id:7,brand:'Samsung',name:'Galaxy A55',storage:'256GB',color:'Azul Marinho',condition:'Novo',stock:60,price:280,sku:'SAM-A55-256-AM'},
+  {id:8,brand:'Samsung',name:'Galaxy S23',storage:'128GB',color:'Creme',condition:'Seminovo A',stock:28,price:420,sku:'SAM-S23-128-CR'},
+  {id:9,brand:'Motorola',name:'Edge 50 Pro',storage:'256GB',color:'Preto',condition:'Novo',stock:45,price:320,sku:'MOT-E50P-256-PT'},
+  {id:10,brand:'Motorola',name:'Moto G85',storage:'128GB',color:'Grafite',condition:'Novo',stock:80,price:180,sku:'MOT-G85-128-GF'},
+  {id:11,brand:'Xiaomi',name:'14 Ultra',storage:'512GB',color:'Branco',condition:'Novo',stock:8,price:780,sku:'XIA-14U-512-BR'},
+  {id:12,brand:'Xiaomi',name:'Redmi Note 13 Pro',storage:'256GB',color:'Roxo',condition:'Novo',stock:55,price:220,sku:'XIA-RN13P-256-RX'},
+  {id:13,brand:'OnePlus',name:'12 Pro',storage:'256GB',color:'Verde Esmeralda',condition:'Novo',stock:15,price:580,sku:'ONE-12P-256-VE'},
+  {id:14,brand:'Apple',name:'iPhone 12',storage:'64GB',color:'Azul',condition:'Recondicionado',stock:0,price:240,sku:'IPH-12-64-AZ'},
+  {id:15,brand:'Samsung',name:'Galaxy Z Fold 5',storage:'256GB',color:'Creme',condition:'Novo',stock:5,price:1200,sku:'SAM-ZF5-256-CR'},
+];
+
+let cart = {};
+let filtered = [...PRODUCTS];
+
+// ======= NAVEGAÇÃO =======
+function goTo(screenId){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+}
+
+function doLogin(){
+  goTo('appScreen');
+  renderTable(PRODUCTS);
+  updateStats();
+}
+
+function setNav(el, pageId){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.getElementById(pageId).style.display='block';
+}
+
+// ======= PRODUTOS =======
+function renderTable(products){
+  const tbody = document.getElementById('productTableBody');
+  filtered = products;
+  document.getElementById('resultCount').textContent = `${products.length} modelo(s)`;
+  document.getElementById('paginationInfo').textContent = `Mostrando ${Math.min(products.length,15)} de ${products.length} resultados`;
+
+  if(!products.length){
+    tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:40px;color:#94a3b8">Nenhum produto encontrado</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = products.map(p=>{
+    const condClass = p.condition==='Novo'?'badge-green':p.condition.includes('A')?'badge-blue':p.condition.includes('B')?'badge-orange':'badge-gray';
+    const stockClass = p.stock===0?'badge-red':p.stock<=10?'badge-orange':'badge-green';
+    const stockTxt = p.stock===0?'Esgotado':p.stock<=10?`${p.stock} un.`:`${p.stock} un.`;
+    const qtdInCart = cart[p.id]?.qty||0;
+    return `
+    <tr>
+      <td><div class="product-cell">
+        <div class="product-icon">📱</div>
+        <div><div class="product-name">${p.name}</div><div class="product-sku">${p.sku}</div></div>
+      </div></td>
+      <td><span class="badge ${condClass}">${p.condition}</span></td>
+      <td>${p.storage}</td>
+      <td>${p.color}</td>
+      <td><span class="badge ${stockClass}">${stockTxt}</span></td>
+      <td class="price">USD ${p.price.toLocaleString()}</td>
+      <td><input type="number" value="${qtdInCart||1}" min="1" max="${p.stock}" id="qty_${p.id}"
+        style="width:60px;padding:5px 8px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:0.82rem;text-align:center"
+        ${p.stock===0?'disabled':''}></td>
+      <td><button class="btn-add-table" ${p.stock===0?'disabled':''} onclick="addToCart(${p.id})">
+        ${p.stock===0?'Esgotado':'+ Pedido'}</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderGrid(products){
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = products.map(p=>{
+    const stockClass = p.stock===0?'badge-red':p.stock<=10?'badge-orange':'badge-green';
+    return `
+    <div style="background:white;border-radius:14px;padding:18px;border:1px solid #e2e8f0;display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:2rem;text-align:center;padding:12px 0">📱</div>
+      <span class="badge badge-blue" style="width:fit-content;font-size:0.68rem">${p.brand}</span>
+      <div style="font-weight:700;font-size:0.9rem">${p.name}</div>
+      <div style="font-size:0.78rem;color:#64748b">${p.storage} · ${p.color}</div>
+      <span class="badge ${stockClass}" style="width:fit-content">${p.stock===0?'Esgotado':p.stock+' un.'}</span>
+      <div style="font-weight:700;font-size:1.05rem;color:#0f172a">USD ${p.price.toLocaleString()}</div>
+      <input type="number" value="1" min="1" max="${p.stock}" id="gqty_${p.id}"
+        style="padding:7px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:0.85rem;text-align:center" ${p.stock===0?'disabled':''}>
+      <button class="btn-add-table" style="width:100%;padding:9px" ${p.stock===0?'disabled':''} onclick="addToCartGrid(${p.id})">
+        ${p.stock===0?'Esgotado':'+ Adicionar ao pedido'}</button>
+    </div>`;
+  }).join('');
+}
+
+function updateStats(){
+  const totalUnits = PRODUCTS.reduce((s,p)=>s+p.stock,0);
+  document.getElementById('totalModels').textContent = PRODUCTS.filter(p=>p.stock>0).length;
+  document.getElementById('totalUnits').textContent = totalUnits.toLocaleString();
+  updateCartStats();
+}
+
+function setView(v, btn){
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(v==='table'){
+    document.getElementById('tableView').style.display='block';
+    document.getElementById('gridView').style.display='none';
+  } else {
+    document.getElementById('tableView').style.display='none';
+    document.getElementById('gridView').style.display='block';
+    renderGrid(filtered);
+  }
+}
+
+function filterProducts(){
+  const brand = document.getElementById('brandFilter').value;
+  const result = PRODUCTS.filter(p=> !brand || p.brand===brand);
+  renderTable(result);
+}
+
+function resetFilters(){
+  document.getElementById('brandFilter').value='';
+  renderTable(PRODUCTS);
+}
+
+function searchProducts(q){
+  const lower = q.toLowerCase();
+  const result = PRODUCTS.filter(p=>
+    p.name.toLowerCase().includes(lower)||
+    p.brand.toLowerCase().includes(lower)||
+    p.sku.toLowerCase().includes(lower)||
+    p.color.toLowerCase().includes(lower)
+  );
+  renderTable(result);
+}
+
+// ======= CARRINHO =======
+function addToCart(id){
+  const qty = parseInt(document.getElementById(`qty_${id}`).value)||1;
+  const p = PRODUCTS.find(x=>x.id===id);
+  if(!p||p.stock===0) return;
+  cart[id] = {product:p, qty: (cart[id]?.qty||0)+qty};
+  updateCartStats();
+  flashBtn(id);
+}
+
+function addToCartGrid(id){
+  const qty = parseInt(document.getElementById(`gqty_${id}`).value)||1;
+  const p = PRODUCTS.find(x=>x.id===id);
+  if(!p||p.stock===0) return;
+  cart[id] = {product:p, qty: (cart[id]?.qty||0)+qty};
+  updateCartStats();
+}
+
+function flashBtn(id){
+  const btns = document.querySelectorAll('.btn-add-table');
+  // flash handled by table re-render
+}
+
+function updateCartStats(){
+  const total = Object.values(cart).reduce((s,i)=>s+i.qty,0);
+  document.getElementById('cartCount').textContent = total;
+  document.getElementById('cartTotal').textContent = total;
+}
+
+function openCart(){
+  document.getElementById('cartModal').classList.add('open');
+  renderCart();
+}
+
+function closeCart(){
+  document.getElementById('cartModal').classList.remove('open');
+}
+
+function renderCart(){
+  const items = Object.values(cart);
+  const container = document.getElementById('cartItems');
+  const summary = document.getElementById('cartSummary');
+
+  if(!items.length){
+    container.innerHTML='<div class="empty-cart">Seu carrinho está vazio</div>';
+    summary.innerHTML='';
+    return;
+  }
+
+  container.innerHTML = items.map(item=>`
+    <div class="cart-item">
+      <div style="font-size:1.4rem">📱</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.product.name}</div>
+        <div class="cart-item-details">${item.product.storage} · ${item.product.color} · ${item.product.condition}</div>
+      </div>
+      <div class="cart-item-qty">
+        <button class="qty-btn" onclick="changeQty(${item.product.id},-1)">−</button>
+        <span class="qty-val">${item.qty}</span>
+        <button class="qty-btn" onclick="changeQty(${item.product.id},1)">+</button>
+      </div>
+      <div class="cart-item-price">USD ${(item.product.price*item.qty).toLocaleString()}</div>
+    </div>
+  `).join('');
+
+  const subtotal = items.reduce((s,i)=>s+i.product.price*i.qty,0);
+  const totalQty = items.reduce((s,i)=>s+i.qty,0);
+  summary.innerHTML=`
+    <div class="cart-row"><span>Subtotal (${totalQty} unidades)</span><span>USD ${subtotal.toLocaleString()}</span></div>
+    <div class="cart-row"><span>Frete</span><span>A calcular</span></div>
+    <div class="cart-row total"><span>Total estimado</span><span>USD ${subtotal.toLocaleString()}</span></div>
+  `;
+}
+
+function changeQty(id, delta){
+  if(!cart[id]) return;
+  cart[id].qty = Math.max(1, cart[id].qty + delta);
+  updateCartStats();
+  renderCart();
+}
+
+function sendWhatsApp(){
+  const items = Object.values(cart);
+  if(!items.length) return;
+  let msg = '🛒 *Pedido UnicaPhones*\n\n';
+  items.forEach(i=>{
+    msg += `• *${i.product.name}* (${i.product.storage} · ${i.product.color} · ${i.product.condition})\n`;
+    msg += `  Qtd: ${i.qty} · USD ${(i.product.price*i.qty).toLocaleString()}\n\n`;
+  });
+  const total = items.reduce((s,i)=>s+i.product.price*i.qty,0);
+  msg += `💰 *Total: USD ${total.toLocaleString()}*\n📦 Aguardo confirmação e dados de envio.`;
+  window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// Fechar modal clicando fora
+document.getElementById('cartModal').addEventListener('click', function(e){ if(e.target===this) closeCart(); });
+
+// Init
+renderTable(PRODUCTS);
+updateStats();
+</script>
+</body>
+</html>
